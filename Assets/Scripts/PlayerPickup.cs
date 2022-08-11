@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 public class PlayerPickup : MonoBehaviour
 {
@@ -7,10 +8,12 @@ public class PlayerPickup : MonoBehaviour
     [SerializeField]
     private int layerNumber;
     //private bool itemPicked;
-    private int itemsPicked;
+    [HideInInspector]
+    public int itemsPicked;
     [SerializeField]
     private int maxItemsPicked;
     public TextMeshProUGUI itemsPickedText;
+    public List<GameObject> pickedObjects;
 
     //Flip variables
     [HideInInspector]
@@ -22,6 +25,10 @@ public class PlayerPickup : MonoBehaviour
     [SerializeField]
     private float negXPosition;
 
+    private void Awake()
+    {
+        pickedObjects.Capacity = 5;
+    }
     public void OnTriggerEnter2D(Collider2D col)
     {
         Debug.Log("I have collided");
@@ -31,6 +38,17 @@ public class PlayerPickup : MonoBehaviour
     public void RemoveItem()
     {
         //itemPicked = false;
+        GameObject deleted = pickedObjects[0];
+        pickedObjects.Remove(deleted);
+        Destroy(deleted);
+        itemsPicked--;
+        pickupUpdate();
+    }
+
+    public void RemoveItem(GameObject item)
+    {
+        pickedObjects.Remove(item);
+        Destroy(item);
         itemsPicked--;
         pickupUpdate();
     }
@@ -54,9 +72,12 @@ public class PlayerPickup : MonoBehaviour
             Debug.Log("with a FLOWER!");
             col.gameObject.transform.position = gameObject.transform.position;
             col.gameObject.transform.parent = gameObject.transform;
+            GameObject flower = col.gameObject;
             //itemPicked = true;
             itemsPicked++;
             pickupUpdate();
+            Debug.Log(col.gameObject.name);
+            pickedObjects.Add(flower);
         }
     }
 

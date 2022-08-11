@@ -18,6 +18,9 @@ public class Barrier : MonoBehaviour
 
     private PlayerPickup playerPickup;
 
+    [SerializeField]
+    private GameObject minimapDot;
+
     private void Start()
     {
         playerPickup = FindObjectOfType<PlayerPickup>();
@@ -29,7 +32,7 @@ public class Barrier : MonoBehaviour
     {
     }
 
-    public void OnTriggerEnter2D(Collider2D col)
+    public void OnTriggerStay2D(Collider2D col)
     {
         FlowerCheck(col);
         EnemyCheck(col);
@@ -39,8 +42,7 @@ public class Barrier : MonoBehaviour
     {
         if (layerNumberFlower == col.gameObject.layer)
         {
-            playerPickup.RemoveItem();
-            Destroy(col.gameObject);
+            playerPickup.RemoveItem(col.gameObject);
             amountInBarrier++;
             BarrierCheck();
         }
@@ -66,11 +68,14 @@ public class Barrier : MonoBehaviour
         {
             barrierActive = true;
             spriteRenderer.color = new Color(1, 1, 1, 1);
+            minimapDot.SetActive(true);
+
         }
         else if (amountInBarrier == 0)
         {
             barrierActive = false;
             spriteRenderer.color = new Color(1, 1, 1, 0.5f);
+            minimapDot.SetActive(false);
         }
     }
 }

@@ -34,8 +34,7 @@ public class Nest : MonoBehaviour
     {
         if (layerNumberFlower == col.gameObject.layer)
         {
-            playerPickup.RemoveItem();
-            Destroy(col.gameObject);
+            playerPickup.RemoveItem(col.gameObject);
             amountInNest++;
             if (amountInNest >= 10)
             {

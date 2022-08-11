@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerControls : MonoBehaviour
 {
@@ -9,13 +10,17 @@ public class PlayerControls : MonoBehaviour
     [SerializeField]
     private PlayerPickup playerPickup;
 
+    private int movementSpeed;
     [SerializeField]
-    private int movementSpeed = 5;
+    private int normalSpeed;
+    [SerializeField]
+    private int highSpeed;
 
 
 
     private void Awake()
     {
+        movementSpeed = normalSpeed;
         rigidBody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -29,6 +34,13 @@ public class PlayerControls : MonoBehaviour
 
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !countdownRunning && playerPickup.itemsPicked > 0)
+            {
+                playerPickup.RemoveItem();
+                StartCoroutine(StartSprint());
+            }
+
         movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         if (movement != new Vector2(0, 0))
         {
@@ -55,4 +67,32 @@ public class PlayerControls : MonoBehaviour
             playerPickup?.flipPosition();
         }
     }
+
+    private float currCountdownValue;
+    private bool countdownRunning;
+
+    public IEnumerator StartSprint(float countdownValue = 4)
+    {
+        countdownRunning = true;
+        currCountdownValue = countdownValue;
+        while (currCountdownValue > 0)
+        {
+            if (currCountdownValue > 2)
+            {
+                movementSpeed = highSpeed;
+            }
+            else
+            {
+                movementSpeed = normalSpeed;
+            }
+            Debug.Log("Countdown: " + currCountdownValue);
+            yield return new WaitForSeconds(1.0f);
+            currCountdownValue--;
+        }
+        if (currCountdownValue == 0)
+        {
+            countdownRunning = false;
+        }
+    }
+
 }
