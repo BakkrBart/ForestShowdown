@@ -6,7 +6,9 @@ public class PlayerPickup : MonoBehaviour
 {
     //Pickup variables
     [SerializeField]
-    private int layerNumber;
+    private int flowerLayer;
+    [SerializeField]
+    private int enemyLayer;
     //private bool itemPicked;
     [HideInInspector]
     public int itemsPicked;
@@ -14,6 +16,8 @@ public class PlayerPickup : MonoBehaviour
     private int maxItemsPicked;
     public TextMeshProUGUI itemsPickedText;
     public List<GameObject> pickedObjects;
+
+    private PlayerControls player;
 
     //Flip variables
     [HideInInspector]
@@ -28,6 +32,8 @@ public class PlayerPickup : MonoBehaviour
     private void Awake()
     {
         pickedObjects.Capacity = 5;
+
+        player = FindObjectOfType<PlayerControls>();
     }
     public void OnTriggerEnter2D(Collider2D col)
     {
@@ -67,7 +73,7 @@ public class PlayerPickup : MonoBehaviour
 
     private void ItemPickupCheck(Collider2D col)
     {
-        if (layerNumber == col.gameObject.layer /*&& !itemPicked*/ && itemsPicked < maxItemsPicked)
+        if (flowerLayer == col.gameObject.layer /*&& !itemPicked*/ && itemsPicked < maxItemsPicked)
         {
             Debug.Log("with a FLOWER!");
             col.gameObject.transform.position = gameObject.transform.position;
@@ -78,6 +84,11 @@ public class PlayerPickup : MonoBehaviour
             pickupUpdate();
             Debug.Log(col.gameObject.name);
             pickedObjects.Add(flower);
+        }
+
+        if (enemyLayer == col.gameObject.layer && player.sprinting)
+        {
+            Destroy(col.gameObject);
         }
     }
 

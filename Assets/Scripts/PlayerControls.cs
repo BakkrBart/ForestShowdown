@@ -10,6 +10,8 @@ public class PlayerControls : MonoBehaviour
     [SerializeField]
     private PlayerPickup playerPickup;
 
+    public bool sprinting;
+
     private int movementSpeed;
     [SerializeField]
     private int normalSpeed;
@@ -80,10 +82,12 @@ public class PlayerControls : MonoBehaviour
             if (currCountdownValue > 2)
             {
                 movementSpeed = highSpeed;
+                sprinting = true;
             }
             else
             {
                 movementSpeed = normalSpeed;
+                sprinting = false;
             }
             Debug.Log("Countdown: " + currCountdownValue);
             yield return new WaitForSeconds(1.0f);

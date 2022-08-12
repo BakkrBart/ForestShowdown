@@ -8,35 +8,41 @@ public class Nest : MonoBehaviour
 
     public TextMeshPro amountText;
     [SerializeField]
+    private int maxFlowers;
     private int amountInNest;
-    [SerializeField]
     private int layerNumberFlower;
-    [SerializeField]
     private int layerNumberEnemy;
 
     private PlayerPickup playerPickup;
     private GameManager gameManager;
 
+    [SerializeField]
+    private bool fullNestWin;
+
     private void Start()
     {
         playerPickup = FindObjectOfType<PlayerPickup>();
         gameManager = FindObjectOfType<GameManager>();
+        layerNumberEnemy = gameManager.layerNumberEnemy;
+        layerNumberFlower = gameManager.layerNumberFlower;
+
+        amountText.text = amountInNest.ToString() + "/" + maxFlowers;
     }
 
     public void OnTriggerEnter2D(Collider2D col)
     {
         FlowerCheck(col);
         EnemyCheck(col);
-        amountText.text = amountInNest.ToString() + "/10";
+        amountText.text = amountInNest.ToString() + "/" + maxFlowers;
     }
 
     private void FlowerCheck(Collider2D col)
     {
-        if (layerNumberFlower == col.gameObject.layer)
+        if (layerNumberFlower == col.gameObject.layer && amountInNest < maxFlowers)
         {
             playerPickup.RemoveItem(col.gameObject);
             amountInNest++;
-            if (amountInNest >= 10)
+            if (amountInNest >= maxFlowers && fullNestWin)
             {
                 gameManager.youWon = true;
             }
