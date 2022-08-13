@@ -8,33 +8,28 @@ public class EnemySpawner : MonoBehaviour
     private GameObject enemyPrefab;
     private SpriteRenderer spriteRenderer;
 
+    //parameters
     [SerializeField]
     private int enemyAmount;
     [SerializeField]
     private float respawnTime = 3;
+    [SerializeField]
+    private float startSpawnTime;
     private bool respawnStarted;
 
+    [HideInInspector]
     public List<GameObject> enemiesSpawned = new List<GameObject>();
 
     private void Start()
     {
-        respawnStarted = false;
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = new Color(0, 0, 0, 0);
-        startGeneration();
+        StartCoroutine(spawnWave(startSpawnTime, enemyAmount));
     }
 
     private void Update()
     {
         RespawnCheck();
-    }
-
-    void startGeneration()
-    {
-        for (int i = 0; i < enemyAmount; i++)
-        {
-            InstantiateEnemy();
-        }
     }
 
     void InstantiateEnemy()
@@ -53,17 +48,16 @@ public class EnemySpawner : MonoBehaviour
 
     private void RespawnCheck()
     {
-        if (enemiesSpawned.Count < enemyAmount)
+        if (enemiesSpawned.Count <= 0)
         {
             if (!respawnStarted)
             {
-                StartCoroutine(newEnemy(respawnTime, enemyAmount - enemiesSpawned.Count));
+                StartCoroutine(spawnWave(respawnTime, enemyAmount));
                 respawnStarted = true;
             }
         }
     }
-
-    IEnumerator newEnemy(float waitTime, float amount)
+    IEnumerator spawnWave(float waitTime, float amount)
     {
         yield return new WaitForSeconds(waitTime);
         for (int i = 0; i < amount; i++)

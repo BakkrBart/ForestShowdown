@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
     private GameObject loseScreen;
     [SerializeField]
     private PlayerControls player;
+    public TextMeshProUGUI eggCollectedText;
 
     private Scene currScene;
 
@@ -36,6 +38,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        eggCollectedText.text = "Feed eggs to win. " + currEggs + "/" + eggsToWin;
         if (currEggs >= eggsToWin)
         {
             youWon = true;
