@@ -25,7 +25,7 @@ public class Nest : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         layerNumberEnemy = gameManager.layerNumberEnemy;
         layerNumberFlower = gameManager.layerNumberFlower;
-
+        amountInNest = 2;
         amountText.text = amountInNest.ToString() + "/" + maxFlowers;
     }
 
